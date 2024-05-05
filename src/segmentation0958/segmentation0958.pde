@@ -4,7 +4,7 @@ void setup() {
 }
 
 void draw() {
-  PImage img = loadImage("0058.jpg"); 
+  PImage img = loadImage("0958.jpg"); 
   PImage segSobel = createImage(img.width, img.height, RGB); 
   PImage segMedia = createImage(img.width, img.height, RGB); 
   PImage segPB = createImage(img.width, img.height, RGB); 
