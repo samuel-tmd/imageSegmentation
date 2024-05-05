@@ -7,7 +7,6 @@ void draw() {
   PImage img = loadImage("0958.jpg"); 
   PImage segSobel = createImage(img.width, img.height, RGB); 
   PImage segMedia = createImage(img.width, img.height, RGB); 
-  PImage segPB = createImage(img.width, img.height, RGB); 
   PImage segLim = createImage(img.width, img.height, RGB); 
   PImage segBB = createImage(img.width, img.height, RGB); 
   
