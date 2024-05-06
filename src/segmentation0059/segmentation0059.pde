@@ -13,6 +13,7 @@ void draw() {
   PImage segPB = createImage(img.width, img.height, RGB); 
   PImage segLim = createImage(img.width, img.height, RGB); 
   PImage segBB = createImage(img.width, img.height, RGB); 
+  PImage segImg = createImage(img.width, img.height, RGB); 
   
   // Filtro de Sobel
   float[][] sobel_x = {
@@ -92,12 +93,14 @@ void draw() {
   for (int y = 0; y < img.height; y++) {
     for (int x = 0; x < img.width; x++) { 
       int pos = y * img.width + x; 
-        if(green(segBB.pixels[pos]) == green(imgGT.pixels[pos]))
-          output.println(pos + ",Positivo");
-        else if(green(segBB.pixels[pos]) ==  255 && green(imgGT.pixels[pos]) == 0)
-          output.println(pos + ",Falso positivo");
-        else if(green(segBB.pixels[pos]) == 0 && green(imgGT.pixels[pos]) == 255)
-          output.println(pos + ",Falso negativo");
+      if(green(segBB.pixels[pos]) ==  255)
+        segImg.pixels[pos] = img.pixels[pos];
+      if(green(segBB.pixels[pos]) == green(imgGT.pixels[pos]))
+        output.println(pos + ",Positivo");
+      else if(green(segBB.pixels[pos]) ==  255 && green(imgGT.pixels[pos]) == 0)
+        output.println(pos + ",Falso positivo");
+      else if(green(segBB.pixels[pos]) == 0 && green(imgGT.pixels[pos]) == 255)
+        output.println(pos + ",Falso negativo");
     }
   }
   
@@ -117,4 +120,7 @@ void draw() {
   
   image(segBB, 0, 0); 
   save("segBB_0059.jpg");
+  
+  image(segImg, 0, 0); 
+  save("segImg_0059.jpg");
 }
