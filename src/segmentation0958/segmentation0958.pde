@@ -1,10 +1,13 @@
 void setup() { 
-  size(300, 350); 
+  size(304, 400); 
   noLoop(); 
 }
 
 void draw() {
+  PrintWriter output;
   PImage img = loadImage("0958.jpg"); 
+  PImage imgGT = loadImage("GT0958.png"); 
+  output = createWriter("results0958.csv");
   PImage segSobel = createImage(img.width, img.height, RGB); 
   PImage segMedia = createImage(img.width, img.height, RGB); 
   PImage segLim = createImage(img.width, img.height, RGB); 
@@ -64,7 +67,6 @@ void draw() {
       segMedia.pixels[pos] = color(media);
     }
   }
-
   
   // Limearização
   for (int y = 0; y < img.height; y++) {
@@ -84,16 +86,34 @@ void draw() {
     }
   }
   
+  // Comparando valores gerados com o Ground Truth original
+  output.println("Pixel,Resultado");
+  for (int y = 0; y < img.height; y++) {
+    for (int x = 0; x < img.width; x++) { 
+      int pos = y * img.width + x; 
+        if(green(segBB.pixels[pos]) == green(imgGT.pixels[pos]))
+          output.println(pos + ",Positivo");
+        else if(green(segBB.pixels[pos]) ==  255 && green(imgGT.pixels[pos]) == 0)
+          output.println(pos + ",Falso positivo");
+        else if(green(segBB.pixels[pos]) == 0 && green(imgGT.pixels[pos]) == 255)
+          output.println(pos + ",Falso negativo");
+    }
+  }
+  
+  // Salvando os resultados
+  output.flush();
+  output.close();
+  
   // Salvando as imagens
   image(segSobel, 0, 0);
-  save("segSobel_0058.jpg");
+  save("segSobel_0958.jpg");
 
   image(segMedia, 0, 0);
-  save("segMedia_0058.jpg");
+  save("segMedia_0958.jpg");
   
   image(segLim, 0, 0); 
-  save("segLim_0058.jpg");
+  save("segLim_0958.jpg");
   
   image(segBB, 0, 0); 
-  save("segBB_0058.jpg");
+  save("segBB_0958.jpg");
 }

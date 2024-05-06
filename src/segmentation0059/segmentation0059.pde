@@ -4,65 +4,117 @@ void setup() {
 }
 
 void draw() {
+  PrintWriter output;
   PImage img = loadImage("0059.jpg"); 
-  PImage imgPB = createImage(img.width, img.height, RGB); 
-  PImage seg1 = createImage(img.width, img.height, RGB);
-  PImage seg2 = createImage(img.width, img.height, RGB);
-  PImage seg = createImage(img.width, img.height, RGB);
+  PImage imgGT = loadImage("GT0059.png"); 
+  output = createWriter("results0059.csv");
+  PImage segSobel = createImage(img.width, img.height, RGB); 
+  PImage segMedia = createImage(img.width, img.height, RGB); 
+  PImage segPB = createImage(img.width, img.height, RGB); 
+  PImage segLim = createImage(img.width, img.height, RGB); 
+  PImage segBB = createImage(img.width, img.height, RGB); 
   
-  // Filtro escala de cinza 
-  for (int y = 0; y < img.height; y++) {
-    for (int x = 0; x < img.width; x++) { 
-      int pos = (y)*img.width + (x); 
-      float media = green(img.pixels[pos]);
-      imgPB.pixels[pos] = color(media);
-    }
-  }
-  
-  image(imgPB, 0, 0); 
-  save("imgPB_0059.jpg");
-  
-  //int pos = mouseY*width + mouseX;
-  //float r = red(imgPB.pixels[pos]);
-  //float g = green(imgPB.pixels[pos]);
-  //float b = blue(imgPB.pixels[pos]);
-  
-  //text(r+ " " + g + " " + b,mouseX,mouseY);
-  
-  for (int y = 0; y < img.height; y++) {
-    for (int x = 0; x < img.width; x++) { 
-      int pos = (y)*img.width + (x); 
-       if(green(imgPB.pixels[pos]) < 40) seg1.pixels[pos] = color(255);
-       else seg1.pixels[pos] = color(0);
-    }
-  }
-  
-  image(seg1, 0, 0); 
-  save("seg1_0059.jpg");
-  
-  for (int y = 0; y < img.height; y++) {
-    for (int x = 0; x < img.width; x++) { 
-      int pos = (y)*img.width + (x); 
-       if(green(imgPB.pixels[pos])   > 195) seg2.pixels[pos] = color(255);
-       else seg2.pixels[pos] = color(0);
-    }
-  }
-  
-  image(seg2, 0, 0); 
-  save("seg2_0059.jpg");
-  
-  for (int y = 0; y < img.height; y++) {
-    for (int x = 0; x < img.width; x++) { 
-      int pos = (y)*img.width + (x); 
-      if(red(seg1.pixels[pos]) == 255 || red(seg2.pixels[pos]) == 255) {
-        seg.pixels[pos] = color(255);
-      } else {
-        seg.pixels[pos] = color(0); 
+  // Filtro de Sobel
+  float[][] sobel_x = {
+    {-1, 0, 1},
+    {-2, 0, 2},
+    {-1, 0, 1}
+  };
+
+  float[][] sobel_y = {
+    {-1, -2, -1},
+    {0, 0, 0},
+    {1, 2, 1}
+  };
+
+  for (int y = 1; y < img.height - 1; y++) {
+    for (int x = 1; x < img.width - 1; x++) {
+      float sumx = 0;
+      float sumy = 0;
+
+      for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+          int pos = (y + i) * img.width + (x + j);
+          float val = red(img.pixels[pos]);
+          sumx += sobel_x[i + 1][j + 1] * val;
+          sumy += sobel_y[i + 1][j + 1] * val;
+        }
       }
+
+      float val = sqrt(sq(sumx) + sq(sumy));
+      segSobel.pixels[y * img.width + x] = color(val);
+    }
+  }
+
+  // Filtro de média 6x6
+  for(int y = 0; y < img.height; y++){
+    for(int x = 0; x < img.width; x++){
+      int pos = y * img.width + x;
+      int qtde = 0;
+      float media = 0;
+
+      for (int i = -20; i <= 20; i++) {
+        for (int j = -20; j <=20; j++) {
+          int newX = x + j;
+          int newY = y + i;
+          if (newX >= 0 && newX < img.width && newY >= 0 && newY < img.height) {
+            media += red(img.pixels[newY * img.width + newX]);
+            qtde++;
+          }
+        }
+      }
+
+      media /= qtde;
+      segMedia.pixels[pos] = color(media);
     }
   }
   
-  image(seg, 0, 0); 
-  save("seg_0059.jpg");
- 
+  // Limearização
+  for (int y = 0; y < img.height; y++) {
+    for (int x = 0; x < img.width; x++) { 
+      int pos = y * img.width + x; 
+      if(red(segMedia.pixels[pos]) > 150) segLim.pixels[pos] = color(255);
+      else segLim.pixels[pos] = color(0); 
+    }
+  }
+  
+   // Bouding Box
+  for (int y = 0; y < img.height; y++) {
+    for (int x = 0; x < img.width; x++) { 
+      int pos = y * img.width + x; 
+        segBB.pixels[pos] = segLim.pixels[pos];
+      if(x < 0 || x > 300 || y < 0) segBB.pixels[pos] = color(0);
+    }
+  }
+  
+  // Comparando valores gerados com o Ground Truth original
+  output.println("Pixel,Resultado");
+  for (int y = 0; y < img.height; y++) {
+    for (int x = 0; x < img.width; x++) { 
+      int pos = y * img.width + x; 
+        if(green(segBB.pixels[pos]) == green(imgGT.pixels[pos]))
+          output.println(pos + ",Positivo");
+        else if(green(segBB.pixels[pos]) ==  255 && green(imgGT.pixels[pos]) == 0)
+          output.println(pos + ",Falso positivo");
+        else if(green(segBB.pixels[pos]) == 0 && green(imgGT.pixels[pos]) == 255)
+          output.println(pos + ",Falso negativo");
+    }
+  }
+  
+  // Salvando os resultados
+  output.flush();
+  output.close();
+  
+  // Salvando as imagens
+  image(segSobel, 0, 0);
+  save("segSobel_0059.jpg");
+
+  image(segMedia, 0, 0);
+  save("segMedia_0059.jpg");
+  
+  image(segLim, 0, 0); 
+  save("segLim_0059.jpg");
+  
+  image(segBB, 0, 0); 
+  save("segBB_0059.jpg");
 }
