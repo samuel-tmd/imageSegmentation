@@ -75,7 +75,7 @@ Positive values are understood as those that match in the generated bitmap and t
 
 The image on the far left depicts the original image from the dataset. Adjacent to it is the original ground truth image from the dataset. Moving towards the right, we have the generated ground truth image, followed by the segmented colored image on the far right. This segmented image was produced by extracting the original picture using the generated ground truth.
 
-The values displayed in the graphic are the numbers of pixels in each category.
+The values displayed in the charts are the numbers of pixels in each category.
 
 #### Image 0048
 
