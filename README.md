@@ -19,7 +19,13 @@
         <li><a href="#built-with">Built with</a></li>
         <li><a href="#collaborators">Collaborators</a></li>
         <li><a href="#description">Description</a></li>
-        <li><a href="#eesults">Results</a></li>
+        <li><a href="#metodology">Metodology</a></li>
+        <li>
+            <a href="#eesults">Results</a>
+            <ul>
+                <li><a href="#explanation">Explanation</a></li>
+            </ul>
+        </li>
         <li><a href="#acknowledgments">Acknowledgments</a></li>
     </ol>
 </details>
@@ -43,11 +49,33 @@ Below are listed the technologies used to implement this image segmentation proj
 
 ## Description
 
+In the realm of computer vision, image segmentation stands as a pivotal technique in image processing. This method involves partitioning a selected image into smaller segments, typically exhibiting strong correlations with real objects or areas of interest within the image. Through this process, the image's representation can be simplified or modified to render it more meaningful and readily analyzable.
+
+This project selected an image database depicting everyday scenarios. However, we chose to narrow down our focus by selecting images of dogs within this database. When properly segmented according to specified criteria, these images can serve as a basis for various application scenarios.
+
+## Metodology
+
+Image processing filters are fundamental techniques for improving the visual quality of images or preparing them for more advanced analyses, such as segmentation and identification of specific features. To perform segmentation, we use the filtering techniques learned in the classroom. Below are listed the filters used, along with a brief description of each:
+
+- Sobel Filter: Its function is to detect the edges of an image. To perform detection, the difference between the intensity of pixels in two different directions (horizontal and vertical) is calculated.
+
+- Average Filter (6x6): Its function is to reduce the noise of an image through smoothing techniques, making it sharper. This mentioned filter uses a 6x6 pixel window, where the average of the pixel values within this area is calculated, and the value of the central pixel is replaced by the obtained average.
+
+- Thresholding: It is a method based on pixel intensity, commonly used to highlight areas of interest in an image. The filter works by defining a threshold value. From this value, pixels with intensity above it are converted to one value (usually white), and those below are converted to another (usually black).
+
+- Bounding Box: Its function is to locate and define the region around an object, highlighting items of interest in images. It involves drawing a rectangle that fully encapsulates the desired object.
+
 ## Results
+
+Below are the project results, comprising segmented images, charts and percentages for true positives, false positives, and false negatives.
 
 ### Explanation
 
+Positive values are understood as those that match in the generated bitmap and the original. A false positive occurs when the generated bitmap indicates that a pixel belongs to a segmented image, but when compared with the original bitmap, the pixel does not belong. A false negative, on the other hand, occurs when the generated bitmap indicates that a pixel does not belong to the segmented image, but when compared with the original bitmap, the pixel does belong.
 
+The image on the far left depicts the original image from the dataset. Adjacent to it is the original ground truth image from the dataset. Moving towards the right, we have the generated ground truth image, followed by the segmented colored image on the far right. This segmented image was produced by extracting the original picture using the generated ground truth.
+
+The values displayed in the graphic are the numbers of pixels in each category.
 
 #### Image 0048
 
@@ -61,9 +89,9 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0048/Results_ Image 0048.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 89.49%
-- False positive: 8.97%
-- Falso negative: 1.54%
+- Positives: 89.49%
+- False positives: 8.97%
+- Falso negatives: 1.54%
 
 #### Image 0049
 
@@ -77,9 +105,9 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0049/Results_ Image 0049.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 90.99%
-- False positive: 9%
-- Falso negative: 0.01%
+- Positives: 90.99%
+- False positives: 9%
+- Falso negatives: 0.01%
 
 #### Image 0051
 
@@ -93,9 +121,9 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0051/Results_ Image 0051.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 93.71%
-- False positive: 4.06%
-- Falso negative: 2.23%
+- Positives: 93.71%
+- False positives: 4.06%
+- Falso negatives: 2.23%
 
 #### Image 0055
 
@@ -109,9 +137,9 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0055/Results_ Image 0055.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 98.01%
-- False positive: 0.36%
-- Falso negative: 1.63%
+- Positives: 98.01%
+- False positives: 0.36%
+- Falso negatives: 1.63%
 
 #### Image 0057
 
@@ -125,9 +153,9 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0057/Results_ Image 0057.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 96.76%
-- False positive: 2.8%
-- Falso negative: 0.44%
+- Positives: 96.76%
+- False positives: 2.8%
+- Falso negatives: 0.44%
 
 #### Image 0059
 
@@ -141,9 +169,9 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0059/Results_ Image 0059.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 74.41%
-- False positive: 1.6%
-- Falso negative: 23.99%
+- Positives: 74.41%
+- False positives: 1.6%
+- Falso negatives: 23.99%
 
 #### Image 0958
 
@@ -157,13 +185,13 @@ Below are listed the technologies used to implement this image segmentation proj
     <img src="src/segmentation0958/Results_ Image 0958.png" alt="Segmented" width="50%">
 </div>
 
-- Positive: 89.4%
-- False positive: 4.88%
-- Falso negative: 5.72%
+- Positives: 89.4%
+- False positives: 4.88%
+- Falso negatives: 5.72%
 
 ## Acknowledgments
 
-- Image dataset utilized: [ECSSD][ecssd-url]
+- Image dataset utilized: [Extended Complex Scene Saliency Dataset (ECSSD)][ecssd-url]
 
 [contributors-shield]: https://img.shields.io/github/contributors/samuel-tmd/imageSegmentation.svg?style=for-the-badge
 [contributors-url]: https://github.com/samuel-tmd/imageSegmentation/graphs/contributors
@@ -177,6 +205,6 @@ Below are listed the technologies used to implement this image segmentation proj
 [processing-url]: https://processing.org/
 [ecssd-url]: https://www.cse.cuhk.edu.hk/leojia/projects/hsaliency/dataset.html
 [lucas-linkedin-url]: https://www.linkedin.com/in/lucas-muner-21388621a/
-[matheus-linkedin-url]: www.linkedin.com/in/matheus-negretti-b177a8307
+[matheus-linkedin-url]: https://www.linkedin.com/in/matheus-negretti-b177a8307
 [renan-linkedin-url]: https://www.linkedin.com/in/renan-couto-62404892/
 [samuel-linkedin-url]: https://www.linkedin.com/in/samuel-dias4a5a/
